@@ -1,0 +1,25 @@
+name: Linting
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  flake8:
+    runs-on: ubuntu-latest
+    name: Lint - PEP8 & more (flake8) 
+    outputs:
+      id: check-python-files
+      value: ${{ steps.set-output.value }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: pip install flake8
+
+      - name: Run flake8
+        run: flake8
